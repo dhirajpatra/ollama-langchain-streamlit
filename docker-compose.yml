@@ -1,0 +1,18 @@
+services:
+  ollama:
+    image: ollama/ollama
+    container_name: ollama
+    volumes:
+      - ./data/ollama:/root/.ollama
+    ports:
+      - 11434:11434
+
+  streamlit-app:
+    build: .
+    container_name: streamlit_app
+    volumes:
+      - .:/app
+    ports:
+      - 8501:8501
+    depends_on:
+      - ollama
