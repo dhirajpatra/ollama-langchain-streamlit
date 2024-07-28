@@ -9,7 +9,7 @@ llm = Ollama(model="phi3:latest", base_url="http://ollama:11434", verbose=True)
 # Define a function to send the prompt to the model and return the response
 def sendPrompt(prompt):
     global llm
-    response = llm.invoke(prompt)
+    response = llm.invoke(f"{prompt} Keep your response concise and within 2-3 sentences.")
     return response
 
 # Define the Streamlit app

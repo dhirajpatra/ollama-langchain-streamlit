@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   ollama:
     image: ollama/ollama
@@ -6,6 +8,11 @@ services:
       - ./data/ollama:/root/.ollama
     ports:
       - 11434:11434
+    deploy:
+      resources:
+        limits:
+          cpus: '4.00'
+          memory: 8G
 
   streamlit-app:
     build: .
@@ -16,3 +23,8 @@ services:
       - 8501:8501
     depends_on:
       - ollama
+    deploy:
+      resources:
+        limits:
+          cpus: '1.00'
+          memory: 2G
