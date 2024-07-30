@@ -1,0 +1,6 @@
+langchain-core==0.2.11
+langchain==0.2.6
+langchain-community==0.2.6
+langchain-text-splitters==0.2.2
+datasets
+fastembed==0.3.2 

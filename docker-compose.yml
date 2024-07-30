@@ -7,22 +7,40 @@ services:
     volumes:
       - ./data/ollama:/root/.ollama
     ports:
-      - 11434:11434
+      - "11434:11434"
     deploy:
       resources:
         limits:
           cpus: '4.00'
           memory: 8G
 
-  streamlit-app:
-    build: .
+  middle_layer:
+    build:
+      context: .
+      dockerfile: Dockerfile.middle
+    container_name: middle_layer
+    volumes:
+      - ./chat_pdf:/app
+    ports:
+      - "8000:8000"
+    deploy:
+      resources:
+        limits:
+          cpus: '4.00'
+          memory: 8G
+
+  streamlit_app:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
     container_name: streamlit_app
     volumes:
       - .:/app
     ports:
-      - 8501:8501
+      - "8501:8501"
     depends_on:
       - ollama
+      - middle_layer
     deploy:
       resources:
         limits:

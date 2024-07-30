@@ -1,41 +1,78 @@
-from langchain_community.llms import Ollama
+# app.py
+
+import os
+import tempfile
+import requests
 import streamlit as st
-from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
+from streamlit_chat import message
 
+# Define the base URL for the Ollama model
+API_URL = "http://middle_layer:8000"
 
-# Define the base URL for the model
-llm = Ollama(model="phi3:latest", base_url="http://ollama:11434", verbose=True)
+# Call chat_pdf API
+def send_to_api(endpoint, data=None, files=None):
+    try:
+        response = requests.post(f"{API_URL}/{endpoint}", json=data, files=files)
+        response.raise_for_status()
+        return response.json()
+    except requests.exceptions.RequestException as e:
+        st.error(f"API request failed: {e}")
+        return None
 
-# Define a function to send the prompt to the model and return the response
-def sendPrompt(prompt):
-    global llm
-    response = llm.invoke(f"{prompt} Keep your response concise and within 2-3 sentences.")
-    return response
+st.set_page_config(page_title="Chat with Ollama & PDF", page_icon=":robot:")
+st.title("Chat with Ollama & PDF")
 
-# Define the Streamlit app
-st.set_page_config(page_title="Chat with Ollama", page_icon=":robot:")
-st.title("Chat with Ollama")
-if "messages" not in st.session_state.keys(): 
+if "messages" not in st.session_state:
     st.session_state.messages = [
-        {"role": "assistant", "content": "Ask me a question !"}
+        {"role": "assistant", "content": "Ask me a question or upload a PDF document!"}
     ]
 
-# Display the chat messages
-if prompt := st.chat_input("Your question"): 
+if "assistant" not in st.session_state:
+    st.session_state.assistant = None
+
+# File uploader
+def read_and_save_file():
+    if st.session_state["file_uploader"]:
+        st.session_state["assistant"] = None
+        st.session_state["messages"] = []
+        st.session_state["user_input"] = ""
+
+        for file in st.session_state["file_uploader"]:
+            with tempfile.NamedTemporaryFile(delete=False) as tf:
+                tf.write(file.getbuffer())
+                file_path = tf.name
+
+            with st.spinner(f"Ingesting {file.name}"):
+                response = send_to_api('ingest', files={"file": open(file_path, 'rb')})
+                os.remove(file_path)
+
+                if response and "message" in response:
+                    st.write(response["message"])
+                else:
+                    st.write("Failed to ingest PDF")
+
+st.file_uploader(
+    "Upload a PDF document",
+    type=["pdf"],
+    key="file_uploader",
+    on_change=read_and_save_file,
+    label_visibility="collapsed",
+    accept_multiple_files=True,
+)
+
+# Display chat messages
+if prompt := st.chat_input("Your question"):
     st.session_state.messages.append({"role": "user", "content": prompt})
 
-# Display the chat messages
-for message in st.session_state.messages: 
+for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.write(message["content"])
-        
-# If the last message is not from the assistant, generate a new response
-print(st.session_state.messages)
-if st.session_state.messages[-1]["role"] != "assistant":
+
+# Generate response
+if st.session_state.messages and st.session_state.messages[-1]["role"] == "user":
     with st.chat_message("assistant"):
         with st.spinner("Thinking..."):
-            response = sendPrompt(prompt)
-            print(response)
-            st.write(response)
-            message = {"role": "assistant", "content": response}
-            st.session_state.messages.append(message)
+            response = send_to_api('ask', data={"query": prompt})
+            response_text = response["response"] if response and "response" in response else "Failed to get response"
+            st.write(response_text)
+            st.session_state.messages.append({"role": "assistant", "content": response_text})
