@@ -1,0 +1,10 @@
+torch==2.4.0
+transformers
+datasets
+faiss-cpu
+pyarrow
+pypdf
+flask
+chromadb
+scipy
+numpy

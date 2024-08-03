@@ -1,0 +1,47 @@
+# Use an official Python runtime as a parent image
+FROM python:3.11-slim as base
+
+# Set environment variables
+ENV PYTHONUNBUFFERED=1
+
+# Set working directory
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+    libsm6 \
+    libxext6 \
+    libxrender-dev \
+    build-essential \
+    gcc \
+    g++ \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create a virtual environment
+RUN python3.11 -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
+# Install large, stable Python dependencies first to leverage Docker caching
+COPY requirements.middle.stable.txt .
+RUN pip install --no-cache-dir -r requirements.middle.stable.txt
+
+# Intermediate stage for application code and frequently changing dependencies
+FROM base as middle_layer
+
+# Copy only the requirements file to leverage Docker cache
+COPY requirements.middle.txt .
+
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirements.middle.txt
+
+# Copy the rest of the application code
+COPY chat_pdf/chat_pdf.py /app/
+
+# Final stage for runtime
+FROM middle_layer as final
+
+EXPOSE 8000
+
+# Command to run the application
+CMD ["python", "/app/chat_pdf.py"]
