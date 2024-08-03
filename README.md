@@ -1,16 +1,19 @@
+
 # Ollama and Phi3 Based Chatbot Application
 
-This repository contains a Streamlit application that leverages the Ollama and Phi3 models to create an interactive chatbot. The application is designed to provide fast and accurate responses to user queries.
+This repository contains a Flask-based application using the Ollama and Phi3 models to create an interactive chatbot. The application is designed to provide fast and accurate responses to user queries through a microservices architecture, where the front-end and back-end are isolated. Unlike other setups where Streamlit and Ollama might be combined, our system uses REST APIs for communication between the front-end and back-end, allowing for greater flexibility and modularity.
 
 ## Features
 - Interactive chatbot interface
 - Model optimization for faster inference
 - Efficient resource management with Docker
+- Microservices architecture with isolated front-end and back-end components
 
 ## Prerequisites
 - Docker
 - Docker Compose
-- Streamlit
+- Flask (for back-end)
+- Front-end application framework (e.g., React)
 
 ## Installation
 
@@ -25,34 +28,39 @@ This repository contains a Streamlit application that leverages the Ollama and P
     sudo docker-compose up --build
     ```
 
-3. Now we need to **pull the phi3 or other model by our ollama container**. Get more details https://github.com/ollama/ollama and https://hub.docker.com/r/ollama/ollama
-
-`docker exec -it ollama ollama run phi3`
-
+3. **Pull the Phi3 or other model with the Ollama container:**
+    Get more details at [Ollama GitHub](https://github.com/ollama/ollama) and [Ollama Docker Hub](https://hub.docker.com/r/ollama/ollama)
+    ```bash
+    docker exec -it ollama ollama run phi3
+    ```
 
 4. **Open the application:**
-    Open your browser and go to `http://localhost:8501` to see the Streamlit application.
+    - The Flask back-end will be running on port `8000`.
+    - Your front-end application should make REST API calls to this back-end service.
 
 ## Usage
 
-1. Enter your input in the text box.
-2. Click the "Predict" button to get the response from the chatbot.
+1. **Front-End Interaction:**
+    - The front-end application communicates with the back-end using REST APIs.
+    - It sends user queries to the back-end and displays responses.
+
+2. **Session Management:**
+    - Each session is managed independently, allowing users to interact with different sessions concurrently.
 
 ## Optimization Strategies
 
 To ensure the chatbot runs efficiently, the following strategies have been employed:
 
-- **Model Optimization**: Quantization and pruning to reduce model size and improve speed.
-- **Efficient Loading**: Lazy loading and caching of models and predictions.
-- **Hardware Acceleration**: Utilization of GPU/TPU and multi-threading for faster computation.
-- **Streamlit Optimization**: Use of `st.cache` for function caching and batch processing of requests.
-- **Asynchronous Processing**: Handling multiple requests concurrently using asynchronous processing.
+- **Model Optimization:** Quantization and pruning to reduce model size and improve speed.
+- **Efficient Loading:** Lazy loading and caching of models and predictions.
+- **Hardware Acceleration:** Utilization of GPU/TPU and multi-threading for faster computation.
+- **Asynchronous Processing:** Handling multiple requests concurrently using asynchronous processing.
 
 ## Application Screenshot
 
-![Ollama and Phi3 Streamlit Chatbot](ollama_phi3_streamlit_chatbot.png)
-![Ollama and Phi3 Streamlit Chatbot konwledge base](ollama_chat2.png)
-![Ollama and Phi3 Streamlit Chatbot konwledge base Chat with Session](chat_session.png)
+![Ollama and Phi3 Chatbot](ollama_phi3_streamlit_chatbot.png)
+![Ollama and Phi3 Chatbot Knowledge Base](ollama_chat2.png)
+![Ollama and Phi3 Chatbot Knowledge Base with Session](chat_session.png)
 
 ## Contributing
 
@@ -65,4 +73,4 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 ## Acknowledgements
 
 - Thanks to the creators of the Ollama and Phi3 models.
-- Special thanks to the Streamlit team for providing an excellent framework for building interactive applications.
+- Special thanks to the Flask and Docker communities for providing excellent tools for building and managing services.
