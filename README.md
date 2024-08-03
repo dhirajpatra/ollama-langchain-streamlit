@@ -51,6 +51,8 @@ To ensure the chatbot runs efficiently, the following strategies have been emplo
 ## Application Screenshot
 
 ![Ollama and Phi3 Streamlit Chatbot](ollama_phi3_streamlit_chatbot.png)
+![Ollama and Phi3 Streamlit Chatbot konwledge base](ollama_chat2.png)
+![Ollama and Phi3 Streamlit Chatbot konwledge base Chat with Session](chat_session.png)
 
 ## Contributing
 
