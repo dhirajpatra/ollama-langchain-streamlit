@@ -14,6 +14,17 @@ services:
           cpus: '4.00'
           memory: 8G
 
+  redis:
+    image: redis:alpine
+    container_name: redis
+    ports:
+      - "6379:6379"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+
   middle_layer:
     build:
       context: .
@@ -21,13 +32,16 @@ services:
     container_name: middle_layer
     volumes:
       - ./chat_pdf:/app
+      - pdf_storage:/app/uploads  # Create a volume for PDF storage
     ports:
       - "8000:8000"
+    depends_on:
+      - redis
     deploy:
       resources:
         limits:
-          cpus: '4.00'
-          memory: 8G
+          cpus: '2.00'
+          memory: 4G
 
   streamlit_app:
     build:
@@ -46,3 +60,6 @@ services:
         limits:
           cpus: '1.00'
           memory: 2G
+
+volumes:
+  pdf_storage:  # Define the volume
