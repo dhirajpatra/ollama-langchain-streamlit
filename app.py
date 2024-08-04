@@ -3,6 +3,7 @@ import tempfile
 import requests
 import streamlit as st
 
+
 API_URL = "http://middle_layer:8000"
 
 def send_to_api(endpoint, data=None, files=None):
@@ -31,7 +32,9 @@ if "assistant" not in st.session_state:
 def read_and_save_file():
     if st.session_state["file_uploader"]:
         st.session_state["assistant"] = None
-        st.session_state["messages"] = []
+        st.session_state["messages"] = [
+            {"role": "assistant", "content": "Ask me a question or upload a PDF document!"}
+        ]
         st.session_state["user_input"] = ""
 
         for file in st.session_state["file_uploader"]:
@@ -43,7 +46,7 @@ def read_and_save_file():
                 response = send_to_api('ingest', files={"file": open(file_path, 'rb')}, data={"session_id": st.session_state.session_id})
                 os.remove(file_path)
 
-                if response and "message" in response:
+                if response and "session_id" in response:
                     st.session_state.session_id = response["session_id"]
                     st.write(response["message"])
                 else:

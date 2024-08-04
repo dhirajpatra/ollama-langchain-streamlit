@@ -1,5 +1,5 @@
 
-# Ollama and Phi3 Based Chatbot Application
+# Ollama and Phi3 Based Microservices Chatbot Application
 
 This repository contains a Flask-based application using the Ollama and Phi3 models to create an interactive chatbot. The application is designed to provide fast and accurate responses to user queries through a microservices architecture, where the front-end and back-end are isolated. Unlike other setups where Streamlit and Ollama might be combined, our system uses REST APIs for communication between the front-end and back-end, allowing for greater flexibility and modularity.
 
@@ -8,6 +8,7 @@ This repository contains a Flask-based application using the Ollama and Phi3 mod
 - Model optimization for faster inference
 - Efficient resource management with Docker
 - Microservices architecture with isolated front-end and back-end components
+- Redis cache and KNN algorithm based similar questions search from cache
 
 ## Prerequisites
 - Docker
@@ -61,6 +62,7 @@ To ensure the chatbot runs efficiently, the following strategies have been emplo
 ![Ollama and Phi3 Chatbot](ollama_phi3_streamlit_chatbot.png)
 ![Ollama and Phi3 Chatbot Knowledge Base](ollama_chat2.png)
 ![Ollama and Phi3 Chatbot Knowledge Base with Session](chat_session.png)
+![Ollama and Phi3 Chatbot Knowledge Base with Cache and KNN search from cache](session_with_redis_and_knn.png)
 
 ## Contributing
 
