@@ -59,16 +59,16 @@ To ensure the chatbot runs efficiently, the following strategies have been emplo
 
 ## Application Screenshot
 
-![Ollama and Phi3 Chatbot](ollama_phi3_streamlit_chatbot.png)
-![Ollama and Phi3 Chatbot Knowledge Base](ollama_chat2.png)
-![Ollama and Phi3 Chatbot Knowledge Base with Session](chat_session.png)
-![Ollama and Phi3 Chatbot Knowledge Base with Cache and KNN search from cache](session_with_redis_and_knn.png)
-![Ollama and Phi3 Chatbot Backend Code Generation](6.png)
-![Ollama and Phi3 Chatbot Backend Code Generation](5.png)
-![Ollama and Phi3 Chatbot Backend Code Generation](4.png)
-![Ollama and Phi3 Chatbot Backend Code Generation](3.png)
-![Ollama and Phi3 Chatbot Backend Code Generation](2.png)
-![Ollama and Phi3 Chatbot Backend Code Generation](1.png)
+![Ollama and Phi3 Chatbot](img/ollama_phi3_streamlit_chatbot.png)
+![Ollama and Phi3 Chatbot Knowledge Base](img/ollama_chat2.png)
+![Ollama and Phi3 Chatbot Knowledge Base with Session](img/chat_session.png)
+![Ollama and Phi3 Chatbot Knowledge Base with Cache and KNN search from cache](img/session_with_redis_and_knn.png)
+![Ollama and Phi3 Chatbot Backend Code Generation](img/6.png)
+![Ollama and Phi3 Chatbot Backend Code Generation](img/5.png)
+![Ollama and Phi3 Chatbot Backend Code Generation](img/4.png)
+![Ollama and Phi3 Chatbot Backend Code Generation](img/3.png)
+![Ollama and Phi3 Chatbot Backend Code Generation](img/2.png)
+![Ollama and Phi3 Chatbot Backend Code Generation](img/1.png)
 
 ## Change branch to code for code and backend application from front end code
 
