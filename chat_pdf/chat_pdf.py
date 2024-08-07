@@ -18,21 +18,44 @@ app = Flask(__name__)
 
 # Connect to Redis
 redis_client = redis.from_url('redis://redis:6379/0')
+llm_name = "codellama:7b-python-q5_K_S"
+# llm_name = "phi3:latest"
 
 class ChatPDF:
     
     def __init__(self):
-        self.model = ChatOllama(model="phi3:latest", base_url="http://ollama:11434", verbose=True)
+        self.model = ChatOllama(model=llm_name, base_url="http://ollama:11434", verbose=True)
         self.text_splitter = RecursiveCharacterTextSplitter(chunk_size=1024, chunk_overlap=100)
         self.embedding = SentenceTransformerEmbeddings(model_name="all-MiniLM-L6-v2")
         self.db = None
         self.prompt_template = PromptTemplate.from_template(
             """
-            <s> [INST] You are an assistant for answering questions. Use the following context to answer the question. 
-            If you do not know the answer, simply say that you do not know. Use at most three sentences and be concise in your response. [/INST] </s> 
-            [INST] Question: {question} 
-            Context: {context} 
-            Answer: [/INST]
+            <s> [INST] You are an advanced code generation assistant. Your task is to generate a complete Flask-based back-end application based on the provided front-end description extracted from a PDF.
+
+            The front-end description will be dynamic and may include UI components, forms, and functionalities. Based on this description, generate the following:
+
+            1. File Folder Structure: Outline the directory structure for the Flask application.
+            2. Backend Files:
+                - `app/__init__.py`: Initialize the Flask app and configure database connections.
+                - `app/models.py`: Define database models based on the required fields.
+                - `app/routes.py`: Implement API endpoints and handle logic for user registration and other functionalities.
+                - `app/config.py`: Configure settings such as database URI.
+                - `app/database.py`: Set up and initialize the database.
+                - `migrations/env.py`: Configure Alembic migrations environment.
+            3. Additional Files:
+                - `requirements.txt`: List all necessary Python packages.
+                - `Dockerfile`: Containerize the Flask application.
+                - `docker-compose.yml`: Define services for Flask and the database.
+
+            Ensure that:
+            - The generated code aligns with the front-end functionalities described in the query.
+            - The query is correctly structured and configured to work together.
+            - Include any necessary explanations or setup instructions if required.
+
+            Use the extracted details from the PDF as front end code to infer the necessary database fields, routes, and any other backend logic. Generate a complete and functional backend implementation.
+
+            Context: {context}
+            [/INST] </s>
             """
         )
 
@@ -161,14 +184,17 @@ class ChatPDF:
                 llm=self.model,
                 retriever=self.db.as_retriever(),
                 chain_type='stuff',
-                chain_type_kwargs={"prompt": self.prompt_template},
+                chain_type_kwargs={
+                    "prompt": self.prompt_template,
+                    "document_variable_name": "context"
+                },
                 return_source_documents=True,
                 verbose=True
             )
             print("Chain created")
             print(f"Query: {query}")
             print(f"Matching documents: {len(matching_docs)}")
-            result = chain.invoke({"input_documents": matching_docs, "query": query})
+            result = chain.invoke({"input_documents": matching_docs, "query": query, "context": query})
             response_text = result.get('result', 'No answer found.')
             print(f"Response text length: {len(response_text)}")
 
@@ -239,7 +265,6 @@ class ChatPDF:
             print("Redis questions and embeddings updated")
         except Exception as e:
             print(f"Error updating Redis: {str(e)}")
-
 
         
 @app.route('/ingest', methods=['POST'])

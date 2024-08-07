@@ -32,7 +32,8 @@ This repository contains a Flask-based application using the Ollama and Phi3 mod
 3. **Pull the Phi3 or other model with the Ollama container:**
     Get more details at [Ollama GitHub](https://github.com/ollama/ollama) and [Ollama Docker Hub](https://hub.docker.com/r/ollama/ollama)
     ```bash
-    docker exec -it ollama ollama run phi3
+    <!-- docker exec -it ollama ollama run phi3 -->
+    docker exec -it olllama ollama run codellama:7b-python-q5_K_S
     ```
 
 4. **Open the application:**
