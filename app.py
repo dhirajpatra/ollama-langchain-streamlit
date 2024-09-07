@@ -1,8 +1,9 @@
+# app.py
+
 import os
 import tempfile
 import requests
 import streamlit as st
-
 
 API_URL = "http://middle_layer:8000"
 
@@ -15,27 +16,22 @@ def send_to_api(endpoint, data=None, files=None):
         st.error(f"API request failed: {e}")
         return None
 
-st.set_page_config(page_title="Chat with Ollama & PDF KB", page_icon=":robot:")
-st.title("Chat with Ollama & PDF KB")
+st.set_page_config(page_title="Admin: PDF Ingestion & Testing", page_icon=":robot:")
+st.title("Admin: PDF Ingestion & Testing")
 
 if "session_id" not in st.session_state:
     st.session_state.session_id = None
 
 if "messages" not in st.session_state:
     st.session_state.messages = [
-        {"role": "assistant", "content": "Ask me a question or upload a PDF document!"}
+        {"role": "assistant", "content": "Upload a PDF document for training and ask questions to test it."}
     ]
-
-if "assistant" not in st.session_state:
-    st.session_state.assistant = None
 
 def read_and_save_file():
     if st.session_state["file_uploader"]:
-        st.session_state["assistant"] = None
         st.session_state["messages"] = [
-            {"role": "assistant", "content": "Ask me a question or upload a PDF document!"}
+            {"role": "assistant", "content": "Upload a PDF document for training and ask questions to test it."}
         ]
-        st.session_state["user_input"] = ""
 
         for file in st.session_state["file_uploader"]:
             with tempfile.NamedTemporaryFile(delete=False) as tf:
@@ -75,3 +71,4 @@ if st.session_state.messages and st.session_state.messages[-1]["role"] == "user"
             response_text = response["response"] if response and "response" in response else "Failed to get response"
             st.write(response_text)
             st.session_state.messages.append({"role": "assistant", "content": response_text})
+

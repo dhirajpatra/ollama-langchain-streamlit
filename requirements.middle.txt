@@ -3,6 +3,7 @@ langchain==0.2.6
 langchain-community==0.2.6
 langchain-text-splitters==0.2.2
 langchain-chroma
+langchain_openai
 datasets
 fastembed==0.3.2
 Flask
@@ -10,3 +11,4 @@ redis
 uuid
 sentence-transformers
 langchain-huggingface
+python-dotenv

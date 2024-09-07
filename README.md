@@ -8,7 +8,6 @@ This repository contains a Flask-based application using the Ollama and Phi3 mod
 - Model optimization for faster inference
 - Efficient resource management with Docker
 - Microservices architecture with isolated front-end and back-end components
-- Redis cache and KNN algorithm based similar questions search from cache
 
 ## Prerequisites
 - Docker
